@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CartItem } from '../types';
+import type { CartItem } from '../types';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { cartAPI } from '../services/api';

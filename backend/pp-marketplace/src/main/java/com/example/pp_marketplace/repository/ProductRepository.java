@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.name LIKE %:searchTerm% OR p.description LIKE %:searchTerm%")
     List<Product> searchProducts(@Param("searchTerm") String searchTerm);
     
-    @Query("SELECT p FROM Product p WHERE p.gameId = :gameId AND (p.name LIKE %:searchTerm% OR p.description LIKE %:searchTerm%)")
+    @Query("SELECT p FROM Product p WHERE p.game.id = :gameId AND (p.name LIKE %:searchTerm% OR p.description LIKE %:searchTerm%)")
     List<Product> searchProductsByGameId(@Param("gameId") Long gameId, @Param("searchTerm") String searchTerm);
     
     List<Product> findByGameIdOrderByRatingDesc(Long gameId);

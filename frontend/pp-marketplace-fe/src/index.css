@@ -1,6 +1,30 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-gaming-purple: #aa3bff;
+  --color-gaming-cyan: #00d4ff;
+  --color-gaming-pink: #ff006e;
+  --color-gaming-orange: #ff9500;
+  
+  --color-dark-50: #f9fafb;
+  --color-dark-100: #f3f4f6;
+  --color-dark-200: #e5e7eb;
+  --color-dark-300: #d1d5db;
+  --color-dark-400: #9ca3af;
+  --color-dark-500: #6b7280;
+  --color-dark-600: #4a5563;
+  --color-dark-700: #374151;
+  --color-dark-800: #1f2937;
+  --color-dark-900: #111827;
+  --color-dark-950: #030712;
+
+  /* Additional specific names used in code */
+  --color-dark-primary-950: #0a0e27;
+  --color-dark-primary-900: #1a1f3a;
+  --color-dark-primary-800: #252d42;
+  --color-dark-primary-700: #3a4558;
+  --color-dark-primary-600: #4a5568;
+}
 
 :root {
   color-scheme: dark light;
@@ -64,7 +88,6 @@ body {
   .product-card {
     @apply bg-dark-900 rounded-lg overflow-hidden border border-dark-700 hover:border-gaming-purple transition-all cursor-pointer;
   }
-}
 }
 
 @media (prefers-color-scheme: dark) {

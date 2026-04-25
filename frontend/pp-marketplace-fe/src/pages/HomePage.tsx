@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Game, Product } from '../types';
+import type { Game, Product } from '../types';
 import { gameAPI, productAPI } from '../services/api';
 import ProductCard from '../components/ProductCard';
 

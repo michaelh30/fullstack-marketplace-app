@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Product, Review } from '../types';
+import type { Product, Review } from '../types';
 import { productAPI, reviewAPI, cartAPI } from '../services/api';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
