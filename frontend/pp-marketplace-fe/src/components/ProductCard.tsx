@@ -11,11 +11,20 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="product-card group">
         <div className="w-full h-48 bg-dark-800 overflow-hidden">
           {product.imageUrl ? (
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-            />
+            <div className="relative w-full h-full">
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+              {product.imageUrl.includes('redPanda.png') && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <span className="bg-black/60 text-white px-4 py-1 rounded-full font-bold tracking-widest text-sm uppercase">
+                    Item
+                  </span>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gaming-red text-4xl">
               🎮

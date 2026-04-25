@@ -52,7 +52,16 @@ export default function ProductDetailPage() {
       <div className="grid grid-cols-2 gap-12">
         <div className="bg-dark-800 rounded-lg p-8 h-96 flex items-center justify-center">
           {product.imageUrl ? (
-            <img src={product.imageUrl} alt={product.name} className="max-h-full" />
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img src={product.imageUrl} alt={product.name} className="max-h-full" />
+              {product.imageUrl.includes('redPanda.png') && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <span className="bg-black/60 text-white px-6 py-2 rounded-full font-bold tracking-widest text-lg uppercase">
+                    Item
+                  </span>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="text-6xl">🎮</div>
           )}

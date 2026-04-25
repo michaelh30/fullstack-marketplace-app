@@ -342,32 +342,6 @@ docker-compose up
 - Re-initialize schema: `psql -U postgres -d mydb -f schema.sql`
 - Check password is correct
 
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) for more troubleshooting tips.
-
-## 📚 Documentation
-
-- [SETUP_GUIDE.md](SETUP_GUIDE.md) - Detailed setup, deployment, and API reference
-- [Backend README](backend/pp-marketplace/HELP.md) - Spring Boot specific info
-- [Frontend README](frontend/pp-marketplace-fe/README.md) - React specific info
-
-## 👥 Contributing
-
-1. Create a feature branch (`git checkout -b feature/amazing-feature`)
-2. Commit changes (`git commit -m 'Add amazing feature'`)
-3. Push to branch (`git push origin feature/amazing-feature`)
-4. Open a Pull Request
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 🤝 Support
-
-For issues, questions, or suggestions:
-1. Check [SETUP_GUIDE.md](SETUP_GUIDE.md) troubleshooting section
-2. Create an issue on GitHub
-3. Contact the development team
-
 ---
 
 **Built with ❤️ for gamers by developers**

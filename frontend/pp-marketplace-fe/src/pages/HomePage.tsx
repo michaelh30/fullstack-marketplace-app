@@ -52,6 +52,28 @@ export default function HomePage() {
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="mb-12">
         <h1 className="section-title">Gaming Marketplace</h1>
+
+        {/* Game Banner */}
+        {selectedGame && (
+          <div className="relative w-full h-64 bg-dark-800 rounded-xl overflow-hidden mb-8 border border-dark-700">
+            <img
+              src={selectedGame.imageUrl}
+              alt={selectedGame.name}
+              className="w-full h-full object-cover"
+            />
+            {selectedGame.imageUrl?.includes('redPanda.png') && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span className="bg-black/60 text-white px-8 py-3 rounded-full font-bold tracking-widest text-2xl uppercase">
+                  Game
+                </span>
+              </div>
+            )}
+            <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+              <h2 className="text-3xl font-bold text-white">{selectedGame.name}</h2>
+              <p className="text-gray-300 mt-2">{selectedGame.description}</p>
+            </div>
+          </div>
+        )}
         
         {/* Game Selection */}
         <div className="flex space-x-4 overflow-x-auto pb-4 mb-8">
