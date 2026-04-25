@@ -17,7 +17,7 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      const response = await orderAPI.create(user.id, shippingAddress);
+      await orderAPI.create(user.id, shippingAddress);
       clearCart();
       alert('Order placed successfully!');
       navigate(`/`);

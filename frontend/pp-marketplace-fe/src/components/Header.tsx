@@ -14,17 +14,17 @@ export default function Header() {
     <header className="bg-dark-900 border-b border-dark-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
-          <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gaming-purple to-gaming-cyan">
+          <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gaming-red to-gaming-darkred">
             🎮 GameHub
           </div>
         </Link>
 
         <nav className="flex-1 flex justify-center space-x-8 mx-8">
-          <Link to="/" className="text-white hover:text-gaming-cyan transition">Home</Link>
+          <Link to="/" className="text-white hover:text-gaming-red transition">Home</Link>
           <input
             type="text"
             placeholder="Search products..."
-            className="bg-dark-800 text-white px-4 py-2 rounded border border-dark-600 focus:border-gaming-cyan w-48"
+            className="bg-dark-800 text-white px-4 py-2 rounded border border-dark-600 focus:border-gaming-red w-48"
           />
         </nav>
 

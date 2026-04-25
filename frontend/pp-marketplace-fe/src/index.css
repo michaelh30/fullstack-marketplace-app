@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-gaming-purple: #aa3bff;
-  --color-gaming-cyan: #00d4ff;
-  --color-gaming-pink: #ff006e;
+  --color-gaming-red: #ff1744;
+  --color-gaming-darkred: #d32f2f;
+  --color-gaming-black: #000000;
   --color-gaming-orange: #ff9500;
   
   --color-dark-50: #f9fafb;
@@ -54,7 +54,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gaming-purple rounded-full hover:bg-gaming-cyan;
+  @apply bg-gaming-red rounded-full hover:bg-gaming-darkred;
 }
 
 /* Dark gaming theme */
@@ -64,17 +64,17 @@ body {
   }
 
   input, textarea, select {
-    @apply bg-dark-800 text-white border border-dark-600 rounded px-3 py-2 transition-colors focus:outline-none focus:border-gaming-cyan;
+    @apply bg-dark-800 text-white border border-dark-600 rounded px-3 py-2 transition-colors focus:outline-none focus:border-gaming-red;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-gaming-purple text-white rounded font-semibold hover:bg-gaming-cyan transition-colors;
+    @apply px-4 py-2 bg-gaming-red text-white rounded font-semibold hover:bg-gaming-darkred transition-colors;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-dark-800 text-white border border-gaming-purple rounded font-semibold hover:bg-gaming-purple transition-colors;
+    @apply px-4 py-2 bg-dark-800 text-white border border-gaming-red rounded font-semibold hover:bg-gaming-red transition-colors;
   }
 
   .card {
@@ -86,7 +86,7 @@ body {
   }
 
   .product-card {
-    @apply bg-dark-900 rounded-lg overflow-hidden border border-dark-700 hover:border-gaming-purple transition-all cursor-pointer;
+    @apply bg-dark-900 rounded-lg overflow-hidden border border-dark-700 hover:border-gaming-red transition-all cursor-pointer;
   }
 }
 

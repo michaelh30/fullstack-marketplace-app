@@ -89,7 +89,7 @@ export default function SignupPage() {
         </form>
 
         <p className="text-gray-400 mt-4">
-          Already have an account? <Link to="/login" className="text-gaming-cyan">Login</Link>
+          Already have an account? <Link to="/login" className="text-gaming-red">Login</Link>
         </p>
       </div>
     </div>

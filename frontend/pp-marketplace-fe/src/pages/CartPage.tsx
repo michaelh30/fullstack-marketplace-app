@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import type { CartItem } from '../types';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { cartAPI } from '../services/api';
@@ -95,7 +94,7 @@ export default function CartPage() {
                   </button>
                 </div>
                 <div className="text-right ml-6 min-w-24">
-                  <div className="font-semibold text-gaming-cyan">${(item.price * item.quantity).toFixed(2)}</div>
+                  <div className="font-semibold text-gaming-red">${(item.price * item.quantity).toFixed(2)}</div>
                 </div>
                 <button
                   onClick={() => handleRemove(item.id)}

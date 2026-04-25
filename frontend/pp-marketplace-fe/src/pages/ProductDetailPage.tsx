@@ -93,7 +93,7 @@ export default function ProductDetailPage() {
             reviews.map((review) => (
               <div key={review.id} className="card">
                 <div className="font-semibold text-white">{review.userName}</div>
-                <div className="text-gaming-cyan">{'⭐'.repeat(review.rating)}</div>
+                <div className="text-gaming-red">{'⭐'.repeat(review.rating)}</div>
                 <p className="text-gray-300 mt-2">{review.comment}</p>
               </div>
             ))

@@ -64,7 +64,7 @@ export default function HomePage() {
               }}
               className={`px-6 py-2 rounded font-semibold whitespace-nowrap transition ${
                 selectedGame?.id === game.id
-                  ? 'bg-gaming-purple text-white'
+                  ? 'bg-gaming-red text-white'
                   : 'bg-dark-800 text-gray-300 hover:bg-dark-700'
               }`}
             >
@@ -79,14 +79,14 @@ export default function HomePage() {
           placeholder="Search products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full bg-dark-800 text-white px-4 py-3 rounded border border-dark-600 focus:border-gaming-cyan mb-6"
+          className="w-full bg-dark-800 text-white px-4 py-3 rounded border border-dark-600 focus:border-gaming-red mb-6"
         />
       </div>
 
       {/* Products Grid */}
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="text-gaming-purple text-2xl">Loading...</div>
+          <div className="text-gaming-red text-2xl">Loading...</div>
         </div>
       ) : products.length === 0 ? (
         <div className="flex justify-center items-center h-64">
