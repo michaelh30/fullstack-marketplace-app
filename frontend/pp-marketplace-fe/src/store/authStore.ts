@@ -27,6 +27,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
+
+      if (!response.ok) {
+        throw new Error('Invalid email or password');
+      }
+
       const data: AuthResponse = await response.json();
       
       const user: User = {

@@ -83,9 +83,9 @@ export const authAPI = {
   login: (email: string, password: string) =>
     apiClient.post('/auth/login', { email, password }),
   signup: (email: string, password: string, fullName: string) =>
-    apiClient.post('/auth/signup', null, { params: { email, password, fullName } }),
+    apiClient.post('/auth/signup', { email, password, fullName }),
   registerAdmin: (email: string, password: string, fullName: string) =>
-    apiClient.post('/auth/admin/register', null, { params: { email, password, fullName } }),
+    apiClient.post('/auth/admin/register', { email, password, fullName }),
 };
 
 export default apiClient;

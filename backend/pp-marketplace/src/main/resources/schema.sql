@@ -114,13 +114,15 @@ CREATE INDEX idx_cart_items_user_id ON cart_items(user_id);
 -- Insert sample data
 -- All items use the same redPanda.png placeholder
 -- Sample Admin User
+-- Default password: admin123
 INSERT INTO users (email, password_hash, full_name, role) VALUES
-('admin@marketplace.com', '$2a$10$slYQmyNdGzin7olVN3p5aOYkNyPZDxL5R2K2x.ZZZ.ZZZ.ZZZ.ZZZ', 'Admin User', 'ADMIN');
+('admin@marketplace.com', '$2a$10$zkBo2yS4nErF58rOGVWdo.Vlp2i7qRpBKPvjB6kQB3CkwAx0ejYSm', 'Admin User', 'ADMIN');
 
 -- Sample Customer Users
+-- Default password for both customers: customer123
 INSERT INTO users (email, password_hash, full_name, role) VALUES
-('customer1@example.com', '$2a$10$slYQmyNdGzin7olVN3p5aOYkNyPZDxL5R2K2x.ZZZ.ZZZ.ZZZ.ZZZ', 'Customer One', 'CUSTOMER'),
-('customer2@example.com', '$2a$10$slYQmyNdGzin7olVN3p5aOYkNyPZDxL5R2K2x.ZZZ.ZZZ.ZZZ.ZZZ', 'Customer Two', 'CUSTOMER');
+('customer1@example.com', '$2a$10$LzFUl5P9ITCIawxyzG7DQul45bu17lBZKsbZUitjQERthnf16ujKW', 'Customer One', 'CUSTOMER'),
+('customer2@example.com', '$2a$10$LzFUl5P9ITCIawxyzG7DQul45bu17lBZKsbZUitjQERthnf16ujKW', 'Customer Two', 'CUSTOMER');
 
 -- Sample Games
 INSERT INTO games (name, description, image_url) VALUES

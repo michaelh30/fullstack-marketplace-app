@@ -224,7 +224,11 @@ Dark gaming theme with high contrast colors:
 
 **Default Admin Credentials** (after schema initialization):
 - Email: `admin@marketplace.com`
-- Password: See BCrypt hash in schema.sql
+- Password: `admin123`
+
+**Default Customer Credentials** (after schema initialization):
+- Email: `customer1@example.com` or `customer2@example.com`
+- Password: `customer123`
 
 ## 🧪 Testing
 
@@ -267,8 +271,8 @@ The database comes pre-loaded with:
 - Dota 2 Cosmetics & Battle Pass
 
 ### Users
-- Admin: `admin@marketplace.com`
-- Customers: `customer1@example.com`, `customer2@example.com`
+- Admin: `admin@marketplace.com` / `admin123`
+- Customers: `customer1@example.com`, `customer2@example.com` / `customer123`
 
 ## 🔄 Build & Deploy
 

@@ -2,6 +2,7 @@ package com.example.pp_marketplace.controller;
 
 import com.example.pp_marketplace.dto.LoginRequest;
 import com.example.pp_marketplace.dto.LoginResponse;
+import com.example.pp_marketplace.dto.RegisterRequest;
 import com.example.pp_marketplace.entity.User;
 import com.example.pp_marketplace.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,12 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public User signup(@RequestParam String email, @RequestParam String password, @RequestParam String fullName) {
-        return authService.registerUser(email, password, fullName);
+    public User signup(@RequestBody RegisterRequest request) {
+        return authService.registerUser(request.getEmail(), request.getPassword(), request.getFullName());
     }
 
     @PostMapping("/admin/register")
-    public User registerAdmin(@RequestParam String email, @RequestParam String password, @RequestParam String fullName) {
-        return authService.registerAdmin(email, password, fullName);
+    public User registerAdmin(@RequestBody RegisterRequest request) {
+        return authService.registerAdmin(request.getEmail(), request.getPassword(), request.getFullName());
     }
 }

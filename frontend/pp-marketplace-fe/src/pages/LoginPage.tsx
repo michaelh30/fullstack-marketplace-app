@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
 export default function LoginPage() {
@@ -8,7 +8,9 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuthStore();
+  const successMessage = location.state?.successMessage;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +35,12 @@ export default function LoginPage() {
         {error && (
           <div className="bg-red-900/20 border border-red-700 text-red-300 p-3 rounded mb-4">
             {error}
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="bg-green-900/20 border border-green-700 text-green-300 p-3 rounded mb-4">
+            {successMessage}
           </div>
         )}
 

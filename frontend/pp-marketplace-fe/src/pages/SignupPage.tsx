@@ -4,12 +4,14 @@ import { useNavigate, Link } from 'react-router-dom';
 export default function SignupPage() {
   const [formData, setFormData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
@@ -30,7 +32,15 @@ export default function SignupPage() {
       });
 
       if (!response.ok) throw new Error('Signup failed');
-      navigate('/login');
+
+      setSuccess('Account created successfully! Redirecting to login...');
+      setFormData({ fullName: '', email: '', password: '', confirmPassword: '' });
+
+      window.setTimeout(() => {
+        navigate('/login', {
+          state: { successMessage: 'Account created successfully. Please log in.' },
+        });
+      }, 1200);
     } catch (err: any) {
       setError(err.message || 'Signup failed');
     } finally {
@@ -46,6 +56,12 @@ export default function SignupPage() {
         {error && (
           <div className="bg-red-900/20 border border-red-700 text-red-300 p-3 rounded mb-4">
             {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="bg-green-900/20 border border-green-700 text-green-300 p-3 rounded mb-4">
+            {success}
           </div>
         )}
 
