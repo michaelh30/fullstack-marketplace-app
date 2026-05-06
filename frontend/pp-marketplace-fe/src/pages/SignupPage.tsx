@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { authAPI } from '../services/api';
 
 export default function SignupPage() {
-  const [formData, setFormData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' });
+  const [formData, setFormData] = useState({ fullName: '', email: '', password: '', confirmPassword: '', role: 'CUSTOMER' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,20 +22,10 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          fullName: formData.fullName,
-        }),
-      });
-
-      if (!response.ok) throw new Error('Signup failed');
+      await authAPI.signup(formData.email, formData.password, formData.fullName, formData.role);
 
       setSuccess('Account created successfully! Redirecting to login...');
-      setFormData({ fullName: '', email: '', password: '', confirmPassword: '' });
+      setFormData({ fullName: '', email: '', password: '', confirmPassword: '', role: 'CUSTOMER' });
 
       window.setTimeout(() => {
         navigate('/login', {
@@ -98,6 +89,32 @@ export default function SignupPage() {
             required
             className="w-full"
           />
+
+          <div className="bg-dark-900 rounded p-4 border border-dark-700">
+            <p className="text-white font-semibold mb-2">Register as</p>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 text-gray-300">
+                <input
+                  type="radio"
+                  name="role"
+                  value="CUSTOMER"
+                  checked={formData.role === 'CUSTOMER'}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                />
+                Customer
+              </label>
+              <label className="flex items-center gap-2 text-gray-300">
+                <input
+                  type="radio"
+                  name="role"
+                  value="SELLER"
+                  checked={formData.role === 'SELLER'}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                />
+                Seller
+              </label>
+            </div>
+          </div>
 
           <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-50">
             {loading ? 'Signing up...' : 'Sign Up'}

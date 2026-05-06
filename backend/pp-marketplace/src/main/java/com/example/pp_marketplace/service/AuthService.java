@@ -44,18 +44,19 @@ public class AuthService {
                 .build();
     }
 
-    public User registerUser(String email, String password, String fullName) {
+    public User registerUser(String email, String password, String fullName, String role) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already exists");
         }
 
         String passwordHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+        String normalizedRole = role != null && role.equalsIgnoreCase("SELLER") ? "SELLER" : "CUSTOMER";
 
         User user = User.builder()
                 .email(email)
                 .passwordHash(passwordHash)
                 .fullName(fullName)
-                .role("CUSTOMER")
+                .role(normalizedRole)
                 .build();
 
         return userRepository.save(user);

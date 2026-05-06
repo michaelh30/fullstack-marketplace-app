@@ -9,6 +9,16 @@ const apiClient = axios.create({
   },
 });
 
+export const uploadAPI = {
+  image: (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return apiClient.post('/uploads/image', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+};
+
 // Add token to requests if it exists
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -18,19 +28,41 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+export interface ProductListParams {
+  page?: number;   // 0-based
+  size?: number;
+  sort?: 'recommended' | 'cheapest' | 'top-rated';
+  search?: string;
+}
+
 // Product API
 export const productAPI = {
+  // --- Non-paginated (kept for admin / internal use) ---
   getAll: () => apiClient.get('/products'),
   getById: (id: number) => apiClient.get(`/products/${id}`),
-  getByGame: (gameId: number) => apiClient.get(`/products/game/${gameId}`),
   getBySubCategory: (subCategoryId: number) => apiClient.get(`/products/subcategory/${subCategoryId}`),
-  getByGameAndSubCategory: (gameId: number, subCategoryId: number) =>
-    apiClient.get(`/products/game/${gameId}/subcategory/${subCategoryId}`),
-  search: (term: string) => apiClient.get(`/products/search?term=${term}`),
-  searchByGame: (gameId: number, term: string) =>
-    apiClient.get(`/products/search/game/${gameId}?term=${term}`),
   getTopRated: (gameId: number) => apiClient.get(`/products/top-rated/game/${gameId}`),
   getCheapest: (gameId: number) => apiClient.get(`/products/cheapest/game/${gameId}`),
+
+  // --- Paginated listing endpoints ---
+  getByGame: (gameId: number, params: ProductListParams = {}) =>
+    apiClient.get(`/products/game/${gameId}`, { params }),
+  getByGameAndSubCategory: (gameId: number, subCategoryId: number, params: ProductListParams = {}) =>
+    apiClient.get(`/products/game/${gameId}/subcategory/${subCategoryId}`, { params }),
+  searchByGame: (gameId: number, term: string, params: ProductListParams = {}) =>
+    apiClient.get(`/products/search/game/${gameId}`, { params: { term, ...params } }),
+
+  // --- Write operations ---
+  create: (data: any) => apiClient.post('/products', data),
+  update: (id: number, data: any) => apiClient.put(`/products/${id}`, data),
+  delete: (id: number) => apiClient.delete(`/products/${id}`),
+};
+
+export const subCategoryAPI = {
+  getByGame: (gameId: number) => apiClient.get(`/subcategories/game/${gameId}`),
+  create: (data: any) => apiClient.post('/subcategories', data),
+  update: (id: number, data: any) => apiClient.put(`/subcategories/${id}`, data),
+  delete: (id: number) => apiClient.delete(`/subcategories/${id}`),
 };
 
 // Game API
@@ -82,8 +114,8 @@ export const cartAPI = {
 export const authAPI = {
   login: (email: string, password: string) =>
     apiClient.post('/auth/login', { email, password }),
-  signup: (email: string, password: string, fullName: string) =>
-    apiClient.post('/auth/signup', { email, password, fullName }),
+  signup: (email: string, password: string, fullName: string, role = 'CUSTOMER') =>
+    apiClient.post('/auth/signup', { email, password, fullName, role }),
   registerAdmin: (email: string, password: string, fullName: string) =>
     apiClient.post('/auth/admin/register', { email, password, fullName }),
 };

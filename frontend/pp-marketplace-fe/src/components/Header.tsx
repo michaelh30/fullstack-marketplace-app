@@ -5,6 +5,7 @@ import { useCartStore } from '../store/cartStore';
 export default function Header() {
   const { isAuthenticated, user, logout } = useAuthStore();
   const { getTotalItems } = useCartStore();
+  const canBuy = !isAuthenticated || user?.role === 'CUSTOMER';
 
   const handleLogout = () => {
     logout();
@@ -21,22 +22,20 @@ export default function Header() {
 
         <nav className="flex-1 flex justify-center space-x-8 mx-8">
           <Link to="/" className="text-white hover:text-gaming-red transition">Home</Link>
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="bg-dark-800 text-white px-4 py-2 rounded border border-dark-600 focus:border-gaming-red w-48"
-          />
+          <Link to="/games" className="text-white hover:text-gaming-red transition">Game</Link>
         </nav>
 
         <div className="flex items-center space-x-6">
-          <Link to="/cart" className="relative">
-            <span className="text-2xl">🛒</span>
-            {getTotalItems() > 0 && (
-              <span className="absolute -top-2 -right-2 bg-gaming-pink text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {getTotalItems()}
-              </span>
-            )}
-          </Link>
+          {canBuy && (
+            <Link to="/cart" className="relative">
+              <span className="text-2xl">🛒</span>
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-gaming-red text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {getTotalItems()}
+                </span>
+              )}
+            </Link>
+          )}
 
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">
@@ -44,6 +43,11 @@ export default function Header() {
               {user?.role === 'ADMIN' && (
                 <Link to="/admin" className="btn-secondary !px-3 !py-1 text-sm">
                   Admin
+                </Link>
+              )}
+              {user?.role === 'SELLER' && (
+                <Link to="/seller" className="btn-secondary !px-3 !py-1 text-sm">
+                  Seller
                 </Link>
               )}
               <button onClick={handleLogout} className="btn-secondary !px-3 !py-1 text-sm">

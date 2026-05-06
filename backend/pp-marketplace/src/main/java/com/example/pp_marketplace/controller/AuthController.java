@@ -23,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public User signup(@RequestBody RegisterRequest request) {
-        return authService.registerUser(request.getEmail(), request.getPassword(), request.getFullName());
+        return authService.registerUser(request.getEmail(), request.getPassword(), request.getFullName(), request.getRole());
     }
 
     @PostMapping("/admin/register")

@@ -17,7 +17,7 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
-    role VARCHAR(50) DEFAULT 'CUSTOMER' CHECK (role IN ('CUSTOMER', 'ADMIN')),
+    role VARCHAR(50) DEFAULT 'CUSTOMER' CHECK (role IN ('CUSTOMER', 'ADMIN', 'SELLER')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -124,11 +124,16 @@ INSERT INTO users (email, password_hash, full_name, role) VALUES
 ('customer1@example.com', '$2a$10$LzFUl5P9ITCIawxyzG7DQul45bu17lBZKsbZUitjQERthnf16ujKW', 'Customer One', 'CUSTOMER'),
 ('customer2@example.com', '$2a$10$LzFUl5P9ITCIawxyzG7DQul45bu17lBZKsbZUitjQERthnf16ujKW', 'Customer Two', 'CUSTOMER');
 
+-- Sample Seller User
+-- Default password: seller123
+INSERT INTO users (email, password_hash, full_name, role) VALUES
+('seller1@example.com', '$2a$12$t304hcMFSNdY0C21BE7Fr.sEZo2sdxwSJJL8iBw79G2ZqNVD/R/ki', 'Seller One', 'SELLER');
+
 -- Sample Games
 INSERT INTO games (name, description, image_url) VALUES
-('Valorant', 'Competitive tactical first-person shooter', '/images/redPanda.png'),
-('CS:GO', 'Counter-Strike: Global Offensive competitive FPS', '/images/redPanda.png'),
-('Dota 2', 'Free-to-play multiplayer online battle arena', '/images/redPanda.png');
+('Valorant', 'Competitive tactical first-person shooter', '/images/valorantLogo.png'),
+('CS:GO', 'Counter-Strike: Global Offensive competitive FPS', '/images/csgoLogo.png'),
+('Dota 2', 'Free-to-play multiplayer online battle arena', '/images/dota2Logo.png');
 
 -- Sample Sub Categories for Valorant
 INSERT INTO sub_categories (game_id, name, description) VALUES
@@ -149,40 +154,48 @@ INSERT INTO sub_categories (game_id, name, description) VALUES
 
 -- Sample Products for Valorant Points
 INSERT INTO products (sub_category_id, game_id, name, description, price, quantity, image_url) VALUES
-(1, 1, '1000 Valorant Points', 'Starter pack of Valorant Points', 9.99, 100, '/images/redPanda.png'),
-(1, 1, '2100 Valorant Points', 'Bundle deal with bonus points', 19.99, 150, '/images/redPanda.png'),
-(1, 1, '5000 Valorant Points', 'Large bundle for big spenders', 49.99, 75, '/images/redPanda.png');
+(1, 1, '1000 Valorant Points', 'Starter pack of Valorant Points', 9.99, 100, '/images/valorantPoint.png'),
+(1, 1, '2100 Valorant Points', 'Bundle deal with bonus points', 19.99, 150, '/images/valorantPoint.png'),
+(1, 1, '5000 Valorant Points', 'Large bundle for big spenders', 49.99, 75, '/images/valorantPoint.png');
 
 -- Sample Products for Valorant Skins
 INSERT INTO products (sub_category_id, game_id, name, description, price, quantity, image_url) VALUES
-(2, 1, 'Elderflame Vandal', 'Legendary weapon skin', 39.99, 20, '/images/redPanda.png'),
-(2, 1, 'Prime 2.0 Phantom', 'Ultra premium skin', 49.99, 15, '/images/redPanda.png');
+(2, 1, 'Elderflame Vandal', 'Legendary weapon skin', 39.99, 20, '/images/elderFlameVandal.png'),
+(2, 1, 'Prime 2.0 Phantom', 'Ultra premium skin', 49.99, 15, '/images/primePhantom.png');
+
+-- Sample Products for Valorant Agent Passes
+INSERT INTO products (sub_category_id, game_id, name, description, price, quantity, image_url) VALUES
+(3, 1, 'Valorant Battle Pass', 'Seasonal battle pass with rewards', 9.99, 500, '/images/valorantLogo.png');
 
 -- Sample Products for CS:GO Skins
 INSERT INTO products (sub_category_id, game_id, name, description, price, quantity, image_url) VALUES
-(4, 2, 'Dragon Lore FN', 'Extremely rare Souvenir skin', 499.99, 3, '/images/redPanda.png'),
-(4, 2, 'Howl FT', 'Iconic StatTrak skin', 299.99, 5, '/images/redPanda.png');
+(4, 2, 'Dragon Lore FN', 'Extremely rare Souvenir skin', 499.99, 3, '/images/dragonLore.png'),
+(4, 2, 'Howl FT', 'Iconic StatTrak skin', 299.99, 5, '/images/howl.png');
 
 -- Sample Products for CS:GO Knives
 INSERT INTO products (sub_category_id, game_id, name, description, price, quantity, image_url) VALUES
-(5, 2, 'Karambit Fade FN', 'Fade pattern karambit knife', 399.99, 8, '/images/redPanda.png'),
-(5, 2, 'M9 Bayonet CW MW', 'Classic M9 Bayonet Crimson Web', 279.99, 10, '/images/redPanda.png');
+(5, 2, 'Karambit Fade FN', 'Fade pattern karambit knife', 399.99, 8, '/images/karambitFade.png'),
+(5, 2, 'M9 Bayonet CW MW', 'Classic M9 Bayonet Crimson Web', 279.99, 10, '/images/m9Bayonet.png');
+
+-- Sample Products for CS:GO Keys
+INSERT INTO products (sub_category_id, game_id, name, description, price, quantity, image_url) VALUES
+(6, 2, 'Case Key', 'Standard case opening key', 2.99, 1000, '/images/caseKey.png');
 
 -- Sample Products for Dota 2
 INSERT INTO products (sub_category_id, game_id, name, description, price, quantity, image_url) VALUES
-(7, 3, 'Arcana Bundle', 'Premium hero cosmetic bundle', 34.99, 30, '/images/redPanda.png'),
-(7, 3, 'TI Battle Pass', 'The International seasonal pass', 9.99, 200, '/images/redPanda.png');
+(7, 3, 'Earth Shaker Arcana Bundle', 'Premium earth shaker cosmetic bundle', 34.99, 30, '/images/earthShakerArcana.png'),
+(8, 3, 'Battle Pass', 'The Dota 2 seasonal pass', 9.99, 200, '/images/battlepassDota2.png');
 
 -- Insert sample reviews
 INSERT INTO reviews (product_id, user_id, rating, comment) VALUES
 (1, 2, 5, 'Great value for VP! Quick delivery.'),
 (1, 3, 4, 'Good product, packaging could be better'),
 (2, 2, 5, 'Exactly as described, highly recommended!'),
-(6, 3, 5, 'Beautiful skin, worth every penny');
+(5, 3, 5, 'Beautiful skin, worth every penny');
 
 -- Update product ratings based on reviews
 UPDATE products SET rating = 4.5, review_count = 2 WHERE id = 1;
 UPDATE products SET rating = 5.0, review_count = 1 WHERE id = 2;
-UPDATE products SET rating = 5.0, review_count = 1 WHERE id = 6;
+UPDATE products SET rating = 5.0, review_count = 1 WHERE id = 5;
 
 COMMIT;

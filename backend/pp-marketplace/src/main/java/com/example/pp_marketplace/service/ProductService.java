@@ -1,10 +1,21 @@
 package com.example.pp_marketplace.service;
 
+import com.example.pp_marketplace.dto.PagedResponse;
 import com.example.pp_marketplace.dto.ProductDTO;
+import com.example.pp_marketplace.entity.Game;
 import com.example.pp_marketplace.entity.Product;
+import com.example.pp_marketplace.entity.SubCategory;
+import com.example.pp_marketplace.repository.GameRepository;
 import com.example.pp_marketplace.repository.ProductRepository;
+import com.example.pp_marketplace.repository.SubCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +24,16 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private GameRepository gameRepository;
+
+    @Autowired
+    private SubCategoryRepository subCategoryRepository;
+
+    // -------------------------------------------------------
+    // Non-paginated (kept for admin / internal use)
+    // -------------------------------------------------------
 
     public List<ProductDTO> getAllProducts() {
         return productRepository.findAll().stream()
@@ -67,6 +88,122 @@ public class ProductService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    // -------------------------------------------------------
+    // Paginated public listing methods
+    // -------------------------------------------------------
+
+    /**
+     * Build a Pageable from the request parameters.
+     * sort: "recommended" | "cheapest" | "top-rated"
+     */
+    private Pageable buildPageable(int page, int size, String sort) {
+        Sort springSort;
+        switch (sort) {
+            case "cheapest"   -> springSort = Sort.by("price").ascending();
+            case "top-rated"  -> springSort = Sort.by("rating").descending();
+            default           -> springSort = Sort.by("id").ascending(); // recommended / default
+        }
+        return PageRequest.of(page, size, springSort);
+    }
+
+    private PagedResponse<ProductDTO> toPagedResponse(Page<Product> productPage) {
+        List<ProductDTO> content = productPage.getContent().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        return PagedResponse.<ProductDTO>builder()
+                .content(content)
+                .page(productPage.getNumber())
+                .size(productPage.getSize())
+                .totalElements(productPage.getTotalElements())
+                .totalPages(productPage.getTotalPages())
+                .first(productPage.isFirst())
+                .last(productPage.isLast())
+                .build();
+    }
+
+    public PagedResponse<ProductDTO> getProductsByGamePaged(Long gameId, int page, int size, String sort) {
+        Pageable pageable = buildPageable(page, size, sort);
+        return toPagedResponse(productRepository.findByGameId(gameId, pageable));
+    }
+
+    public PagedResponse<ProductDTO> getProductsByGameAndSubCategoryPaged(
+            Long gameId, Long subCategoryId, int page, int size, String sort) {
+        Pageable pageable = buildPageable(page, size, sort);
+        return toPagedResponse(productRepository.findByGameIdAndSubCategoryId(gameId, subCategoryId, pageable));
+    }
+
+    public PagedResponse<ProductDTO> searchProductsByGamePaged(
+            Long gameId, String searchTerm, int page, int size, String sort) {
+        Pageable pageable = buildPageable(page, size, sort);
+        return toPagedResponse(productRepository.searchProductsByGameId(gameId, searchTerm, pageable));
+    }
+
+    public PagedResponse<ProductDTO> getAllProductsPaged(int page, int size, String sort) {
+        Pageable pageable = buildPageable(page, size, sort);
+        return toPagedResponse(productRepository.findAll(pageable));
+    }
+
+    // -------------------------------------------------------
+    // Write operations
+    // -------------------------------------------------------
+
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        Game game = gameRepository.findById(productDTO.getGameId())
+                .orElseThrow(() -> new RuntimeException("Game not found"));
+        SubCategory subCategory = subCategoryRepository.findByIdAndGameId(productDTO.getSubCategoryId(), productDTO.getGameId())
+                .orElseThrow(() -> new RuntimeException("SubCategory not found for selected game"));
+
+        Product product = Product.builder()
+                .name(productDTO.getName())
+                .description(productDTO.getDescription())
+                .price(productDTO.getPrice())
+                .quantity(productDTO.getQuantity())
+                .imageUrl(productDTO.getImageUrl())
+                .rating(BigDecimal.ZERO)
+                .reviewCount(0)
+                .game(game)
+                .subCategory(subCategory)
+                .build();
+
+        product = productRepository.save(product);
+        return convertToDTO(product);
+    }
+
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        if (productDTO.getGameId() != null) {
+            Game game = gameRepository.findById(productDTO.getGameId())
+                    .orElseThrow(() -> new RuntimeException("Game not found"));
+            product.setGame(game);
+        }
+        if (productDTO.getSubCategoryId() != null) {
+            SubCategory subCategory = subCategoryRepository.findByIdAndGameId(productDTO.getSubCategoryId(), productDTO.getGameId())
+                    .orElseThrow(() -> new RuntimeException("SubCategory not found for selected game"));
+            product.setSubCategory(subCategory);
+        }
+        if (productDTO.getName() != null) product.setName(productDTO.getName());
+        if (productDTO.getDescription() != null) product.setDescription(productDTO.getDescription());
+        if (productDTO.getPrice() != null) product.setPrice(productDTO.getPrice());
+        if (productDTO.getQuantity() != null) product.setQuantity(productDTO.getQuantity());
+        if (productDTO.getImageUrl() != null) product.setImageUrl(productDTO.getImageUrl());
+
+        product = productRepository.save(product);
+        return convertToDTO(product);
+    }
+
+    public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        productRepository.delete(product);
+    }
+
+    // -------------------------------------------------------
+    // Conversion
+    // -------------------------------------------------------
 
     private ProductDTO convertToDTO(Product product) {
         return ProductDTO.builder()

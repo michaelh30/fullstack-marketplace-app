@@ -6,8 +6,10 @@ import com.example.pp_marketplace.entity.*;
 import com.example.pp_marketplace.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,9 +28,7 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
-
+    @Transactional
     public OrderDTO createOrder(Long userId, String shippingAddress) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -47,6 +47,7 @@ public class OrderService {
                 .build();
 
         order = orderRepository.save(order);
+        List<OrderItem> orderItems = new ArrayList<>();
 
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();
@@ -56,10 +57,12 @@ public class OrderService {
                     .quantity(cartItem.getQuantity())
                     .priceAtPurchase(product.getPrice())
                     .build();
-            orderItemRepository.save(orderItem);
+            OrderItem savedOrderItem = orderItemRepository.save(orderItem);
+            orderItems.add(savedOrderItem);
             order.setTotalPrice(order.getTotalPrice().add(product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()))));
         }
 
+        order.setOrderItems(orderItems);
         order = orderRepository.save(order);
         cartItemRepository.deleteByUserId(userId);
         return convertToDTO(order);
@@ -92,7 +95,7 @@ public class OrderService {
     }
 
     private OrderDTO convertToDTO(Order order) {
-        List<OrderItemDTO> orderItems = order.getOrderItems().stream()
+        List<OrderItemDTO> orderItems = (order.getOrderItems() == null ? Collections.<OrderItem>emptyList() : order.getOrderItems()).stream()
                 .map(this::convertOrderItemToDTO)
                 .collect(Collectors.toList());
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import type { Product, Review } from '../types';
 import { productAPI, reviewAPI, cartAPI } from '../services/api';
 import { useCartStore } from '../store/cartStore';
@@ -33,7 +33,7 @@ export default function ProductDetailPage() {
   }, [id]);
 
   const handleAddToCart = async () => {
-    if (!user || !product) return;
+    if (!user || user.role !== 'CUSTOMER' || !product) return;
 
     try {
       const response = await cartAPI.addItem(user.id, product.id, quantity);
@@ -86,9 +86,19 @@ export default function ProductDetailPage() {
               onChange={(e) => setQuantity(Number(e.target.value))}
               className="w-20"
             />
-            <button onClick={handleAddToCart} className="btn-primary flex-1">
-              Add to Cart
-            </button>
+            {user?.role === 'CUSTOMER' ? (
+              <button onClick={handleAddToCart} className="btn-primary flex-1">
+                Add to Cart
+              </button>
+            ) : user ? (
+              <div className="btn-secondary flex-1 text-center opacity-70">
+                Customers Only
+              </div>
+            ) : (
+              <Link to="/login" className="btn-primary flex-1 text-center">
+                Login to Buy
+              </Link>
+            )}
           </div>
         </div>
       </div>

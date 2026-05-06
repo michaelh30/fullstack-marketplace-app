@@ -1,26 +1,35 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { orderAPI } from '../services/api';
 
 export default function CheckoutPage() {
-  const [shippingAddress, setShippingAddress] = useState('');
+  const [accountName, setAccountName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { getTotalPrice, getTotalItems, clearCart } = useCartStore();
+  const { items, getTotalPrice, getTotalItems, clearCart } = useCartStore();
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const checkoutItems = useMemo(() => items.map((item) => ({ ...item })), [items]);
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !shippingAddress.trim()) return;
+    if (!user || !accountName.trim() || checkoutItems.length === 0) return;
 
     setLoading(true);
     try {
-      await orderAPI.create(user.id, shippingAddress);
+      const orderTotal = getTotalPrice();
+      const response = await orderAPI.create(user.id, accountName.trim());
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       clearCart();
-      alert('Order placed successfully!');
-      navigate(`/`);
+      navigate('/chat', {
+        state: {
+          accountName: accountName.trim(),
+          orderId: response.data.id,
+          items: checkoutItems,
+          totalPrice: orderTotal,
+        },
+      });
     } catch (error) {
       console.error('Failed to place order:', error);
       alert('Failed to place order');
@@ -29,31 +38,67 @@ export default function CheckoutPage() {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12 text-center">
+        <p className="text-gray-400 mb-4">Please log in before checkout.</p>
+        <Link to="/login" className="btn-primary">Login</Link>
+      </div>
+    );
+  }
+
+  if (user.role !== 'CUSTOMER') {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12 text-center">
+        <p className="text-gray-400 mb-4">Only customer accounts can checkout.</p>
+        <Link to="/" className="btn-primary">Back Home</Link>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12 text-center">
+        <h1 className="section-title">Checkout</h1>
+        <p className="text-gray-400 mb-4">Your cart is empty.</p>
+        <Link to="/" className="btn-primary">Find Items</Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
+    <div className="max-w-5xl mx-auto px-4 py-12">
       <h1 className="section-title">Checkout</h1>
 
-      <div className="grid grid-cols-3 gap-8">
-        <div className="col-span-2">
+      {loading && (
+        <div className="card mb-6 text-center">
+          <div className="mx-auto mb-4 h-12 w-12 rounded-full border-4 border-dark-700 border-t-gaming-red animate-spin" />
+          <p className="text-white font-semibold">Processing your order...</p>
+          <p className="text-gray-400 text-sm mt-1">Connecting you to the seller after payment confirmation.</p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
           <form onSubmit={handleCheckout} className="space-y-6">
             <div className="card">
-              <h2 className="text-xl font-bold text-white mb-4">Shipping Address</h2>
+              <h2 className="text-xl font-bold text-white mb-4">Account Name / ID</h2>
               <textarea
-                value={shippingAddress}
-                onChange={(e) => setShippingAddress(e.target.value)}
-                placeholder="Enter your shipping address"
-                required
+                value={accountName}
+                onChange={(e) => setAccountName(e.target.value)}
+                placeholder="Enter your in-game account name, UID, server, or delivery note"
                 className="w-full"
                 rows={5}
+                disabled={loading}
               />
             </div>
 
             <button
               type="submit"
-              disabled={loading || !shippingAddress.trim()}
+              disabled={loading || !accountName.trim()}
               className="btn-primary w-full disabled:opacity-50"
             >
-              {loading ? 'Processing...' : 'Place Order'}
+              {loading ? 'Please wait...' : 'Place Order'}
             </button>
           </form>
         </div>

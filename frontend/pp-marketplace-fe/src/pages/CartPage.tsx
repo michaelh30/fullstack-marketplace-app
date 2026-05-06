@@ -56,6 +56,15 @@ export default function CartPage() {
     );
   }
 
+  if (user.role !== 'CUSTOMER') {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+        <p className="text-gray-400 mb-4">Only customer accounts can buy items.</p>
+        <Link to="/" className="btn-primary">Back Home</Link>
+      </div>
+    );
+  }
+
   if (loading) return <div className="text-center py-12">Loading...</div>;
 
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
